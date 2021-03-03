@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const graphqlSchema = require('./graphql/schema')
 const graphqlResolvers = require('./graphql/resolvers')
 const config = require('./config');
+const scheduledCronJobs = require('./scheduledAPIs/cron');
 const app = express();
 
 let port = (config && config.port) || 8000;
@@ -15,6 +16,10 @@ app.use('/graphql', graphqlHttp({
     graphiql: true
 }))
 
+if(process.env.DOES_REQUIRED_SCHEDULED_TWITTER_APIS){
+    // cronJob will start
+    scheduledCronJobs();
+}
 const options = {useNewUrlParser: true, useUnifiedTopology: true}
 
 mongoose.connect(mongoDdUrl, options)

@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Server",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\server\\app.js",
+            "env": {
+                "DOES_REQUIRED_SCHEDULED_TWITTER_APIS": true,
+                "TWITTER_CONSUMER_KEY": "AEDqkfxLt7JCSPfUOtgG013yS",
+                "TWITTER_CONSUMER_SECRET": "MOdScqJz7US80djiJHvgbOtLwLHTTTF8RycRM7Tm6ske68irsr",
+                "TWITTER_ACCESS_TOKEN_KEY": "174658080-mp9DyHZ0dVygpMScFUqxLgCEME6VtZ6L6bK80I72",
+                "TWITTER_ACCESS_TOKEN_SECRET": "Z04VX2ytnCbPzUhuGRGfNpjMff6FFSEUJUKCEbcwGhYjT",
+                "TWITTER_BEARER_TOKEN": "AAAAAAAAAAAAAAAAAAAAAAU12AAAAAAAPl%2BkaOKnSZ%2BiCv2F7wKPt3tGtb0%3DMIVy0mXgHg66gIU6JfQvi7hAOVpR3BpsbTkGYy1thLLfMO4Awe",
+                "JOB_TYPES": "tweets",
+                "TIME_INTERVAL_IN_MINITUES": "1"
+            },
+            "console": "internalConsole",
+            "outputCapture": "std"
+        }
+    ]
+}
