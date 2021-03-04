@@ -16,7 +16,7 @@ app.use('/graphql', graphqlHttp({
     graphiql: true
 }))
 
-if(process.env.DOES_REQUIRED_SCHEDULED_TWITTER_APIS){
+if((process.env.DOES_REQUIRED_SCHEDULED_TWITTER_APIS || '').toUpperCase() === 'TRUE'){
     // cronJob will start
     scheduledCronJobs();
 }
