@@ -15,8 +15,7 @@ module.exports = {
                     createdAt: new Date(article._doc.createdAt).toISOString()
                 }
             })
-        }
-        catch (error) {
+        } catch (error) {
             throw error
         }
 
@@ -30,15 +29,14 @@ module.exports = {
             })
             let newArticle = await article.save()
             return { ...newArticle._doc, _id: newArticle.id }
-        }
-        catch (error) {
+        } catch (error) {
             throw error
         }
 
     },
     createTweet: async args => {
         try {
-            if(!args.tweet) return { msg: 'Please send tweet detailes in request', status: 200};
+            if (!args.tweet) return { msg: 'Please send tweet detailes in request', status: 200 };
             let { id, text } = args.tweet;
             let tweet = new Tweet({ id, ...args.tweet });
             // let tweet = new Tweet({
@@ -47,8 +45,7 @@ module.exports = {
             // }, {_id: false})
             let newTweet = await tweet.save()
             return { ...newTweet._doc, _id: newTweet.id }
-        }
-        catch (error) {
+        } catch (error) {
             throw error
         }
     },
@@ -62,7 +59,7 @@ module.exports = {
              *  3. send the same data to FE
              */
             let tweetsFetched = await Tweet.find();
-            if(tweetsFetched.length) {
+            if (tweetsFetched.length) {
                 return tweetsFetched.map(tweet => {
                     return {
                         ...tweet._doc,
@@ -90,21 +87,21 @@ module.exports = {
             };
             let result = tweetHandlers.invokeSearchTweetsApiWithQueryStringAndParams(reqParams);
             return result;
-        }
-        catch (error) {
+        } catch (error) {
             throw error
         }
 
     },
-    trendingTweets: async(args) => {
-        let {weoid} = args;
+    trendingTweets: async (args) => {
+        let { weoid } = args;
         try {
             // API => 
             // WOIED code for India=>  23424848
-            let result = await tweetHandlers.getTrendingTweets({weoid});
+            let result = await tweetHandlers.getTrendingTweets({ weoid });
             return result;
         } catch (error) {
             console.log(error);
+            throw error
         }
     }
 }
