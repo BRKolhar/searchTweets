@@ -32,12 +32,16 @@ module.exports = buildSchema(`
     source: String!
   }
 
-  type trendingTweets {
+  type trendingTweet {
     name: String
     url: String
     promoted_content: String
     query: String
     tweet_volume: String
+  }
+
+  type trendingTweetsArray {
+    trends: [trendingTweet]
   }
 
   input TweetInput {
@@ -56,7 +60,7 @@ module.exports = buildSchema(`
   type Query {
     articles:[Article!]
     tweets:[Tweet!]
-    trendingTweets(weoid: String):[TendingTweet!] 
+    trendingTweets(weoid: String):[trendingTweetsArray] 
   }
 
   type Mutation {

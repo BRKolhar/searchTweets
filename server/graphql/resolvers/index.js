@@ -96,8 +96,8 @@ module.exports = {
         }
 
     },
-    trendingTweets: async(weoid) => {
-        console.log("weoid: ", weoid)
+    trendingTweets: async(args) => {
+        let {weoid} = args;
         try {
             // API => 
             // WOIED code for India=>  23424848

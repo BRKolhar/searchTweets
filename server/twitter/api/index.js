@@ -1,5 +1,8 @@
 const twitterClient = require('../index');
 const resolvers = require('../../graphql/resolvers');
+let Tweet = require('../../models/tweet');
+let TrendingTweet = require('../../models/terendingTweets');
+
 // const axios = require('axios');
 // let tweetsModel = require("../../models/tweets.js");
 
@@ -12,17 +15,27 @@ function invokeSearchTwitterAPI() {
             // place: "contained_within,country,country_code,full_name,geo,id,name,place_type",
             query: "tending"
         };
-        return twitterClient.get('https://api.twitter.com/2/tweets/search/recent', reqParams, function (error, tweets, response) {
-            try {
-                if (!error) {
-                    console.log(tweets);
+        return new Promise((resolve, reject) => {
+            twitterClient.get('https://api.twitter.com/2/tweets/search/recent', reqParams, function (error, tweets, response) {
+                try {
+                    if (error) {
+                        reject(error);
+                    }
+                    if (tweets.data && tweets.data.length) {
+                        (tweets.data).map(async (t) => {
+                            // remove the duplicate
+                            Tweet.findOneAndDelete({id: t.id});
+                            let tweet = new Tweet({ ...t });
+                            //insert new recored
+                            await tweet.save();
+                        })
+                        // Tweet.insertMany(tweets.data);
+                    }
+                    resolve(tweets);
+                } catch (error) {
+                    reject(error);
                 }
-                // console.log("######tweets", tweets);  // Tweet body.
-                (tweets.data || []).map(tweet => resolvers.createTweet({ tweet }));
-                return tweets;
-            } catch (error) {
-                console.log(error);
-            }
+            });
         });
     } catch (error) {
         console.log(error)
@@ -38,18 +51,27 @@ function invokeSearchTweetsApiWithQueryStringAndParams(params = {}) {
      *  3. stroe the result info DB
      */
     try {
-        // let queryString = params.queryString || '';
-        // let params = {};
-        // step-1
-        return twitterClient.get(`https://api.twitter.com/2/tweets/search/recent`, params, function (error, tweets, response) {
-            if (!error) {
-                console.log(tweets);
-            }
-            //step-2
+        return new Promise((resolve, reject) => {
+            // step-1
+            twitterClient.get(`https://api.twitter.com/2/tweets/search/recent`, params, function (error, tweets, response) {
+                if (error) {
+                    reject(error);
+                }
+                //step-2
 
-            //setp-3
-            console.log(tweets);  // Tweet body.
-            return tweets;
+                //setp-3
+                if (tweets.data && tweets.data.length) {
+                    (tweets.data).map(async (t) => {
+                        // remove the duplicate
+                        Tweet.findOneAndDelete({id: t.id});
+                        let tweet = new Tweet({ ...t });
+                        //insert new recored
+                        await tweet.save();
+                    })
+                    // Tweet.insertMany(tweets.data);
+                }
+                resolve(tweets);
+            });
         });
     } catch (error) {
         console.log(error);
@@ -64,19 +86,33 @@ function getTrendingTweets(params = {}) {
      *  3. stroe the result info DB
      */
     try {
-        // let queryString = params.queryString || '';
-        // let params = {};
         // step-1
-        !params.id && (params.id = 23424848)
-        return twitterClient.get(`https://api.twitter.com/1.1/trends/place.json`, params, function (error, tweets, response) {
-            if (!error) {
-                console.log(tweets);
-            }
-            //step-2
+        params.weoid && (params.id = params.weoid)
+        !params.id && (params.id = 23424848) // we are assigning 'india-weoid' as default 'id'
+        return new Promise((resolve, reject) => {
+            twitterClient.get(`https://api.twitter.com/1.1/trends/place.json`, params, function (error, tweets, response) {
+                try {
+                    if (error) {
+                        reject(error);
+                    }
+                    //step-2
 
-            //setp-3
-            console.log(tweets);  // Tweet body.
-            return tweets;
+                    //setp-3
+                    if (tweets.data && tweets.data.length) {
+                        (tweets.data).map(async(t) => {
+                            // remove the duplicate
+                            TrendingTweet.findOneAndDelete({id: t.id});
+                            let tweet = new TrendingTweet({ ...t });
+                            //insert new recored
+                            await tweet.save();
+                        })
+                        // TrendingTweet.insertMany(tweets.data);
+                    }
+                    resolve(tweets);
+                } catch (error) {
+                    reject(error);
+                }
+            });
         });
     } catch (error) {
         console.log(error);
