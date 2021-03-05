@@ -16,10 +16,32 @@ module.exports = buildSchema(`
     body: String!
   }
 
+  type public_metrics{
+    retweet_count : Int
+    reply_count : Int
+    like_count : Int
+    quote_count :Int
+  }
   type Tweet {
     _id: ID!
     id: String!
     text: String!
+    public_metrics: public_metrics
+    createdAt: String!
+    updatedAt: String!
+    source: String!
+  }
+
+  type trendingTweet {
+    name: String
+    url: String
+    promoted_content: String
+    query: String
+    tweet_volume: String
+  }
+
+  type trendingTweetsArray {
+    trends: [trendingTweet]
   }
 
   input TweetInput {
@@ -27,9 +49,18 @@ module.exports = buildSchema(`
     text: String!
   }
   
+  type TendingTweet {
+    name: String!
+    url: String!
+    promoted_content: String!
+    query: String!
+    tweet_volume: String!
+  }
+
   type Query {
     articles:[Article!]
     tweets:[Tweet!]
+    trendingTweets(weoid: String):[trendingTweetsArray] 
   }
 
   type Mutation {

@@ -12,38 +12,8 @@ const tweetSchema = new Schema({
         "type": "String",
         "required": "true"
     },
-    "attachments": {
-        "media_keys": {
-            "type": [
-                "String"
-            ]
-        }
-    },
-    "created_at": {
-        "type": "Date"
-    },
-    "entities": {
-        "hashtags": {
-            "type": [
-                "Mixed"
-            ]
-        },
-        "mentions": {
-            "type": [
-                "Mixed"
-            ]
-        },
-        "urls": {
-            "type": [
-                "Mixed"
-            ]
-        }
-    },
-    "lang": {
+    "conversation_id": {
         "type": "String"
-    },
-    "possibly_sensitive": {
-        "type": "Boolean"
     },
     "referenced_tweets": {
         "type": [
@@ -53,9 +23,47 @@ const tweetSchema = new Schema({
     "source": {
         "type": "String"
     },
-    "in_reply_to_user_id": {
+    "possibly_sensitive": {
+        "type": "Boolean"
+    },
+    "lang": {
         "type": "String"
     },
+    "author_id": {
+        "type": "String"
+    },
+    "entities": {
+        "mentions": {
+            "type": [
+                "Mixed"
+            ]
+        }
+    },
+    "reply_settings": {
+        "type": "String"
+    },
+    "context_annotations": {
+        "type": [
+            "Mixed"
+        ]
+    },
+    "public_metrics": {
+        "retweet_count": {
+            "type": "Number"
+        },
+        "reply_count": {
+            "type": "Number"
+        },
+        "like_count": {
+            "type": "Number"
+        },
+        "quote_count": {
+            "type": "Number"
+        }
+    },
+    "created_at": {
+        "type": "Date"
+    }
 }, { timestamps: true });
 
 
