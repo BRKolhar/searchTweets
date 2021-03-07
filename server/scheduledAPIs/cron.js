@@ -6,7 +6,7 @@ var CronJob = require('cron').CronJob;
 let cronJobsForTwitterAPIs = require('./jobs/tweets')(CronJob);
 var twitterEndPoints = require('../twitter/api');
 
-module.exports = function startCronJobs() {
+module.exports = function startCronJobs(logger) {
   try {
     let jobs = [];
 
@@ -19,6 +19,7 @@ module.exports = function startCronJobs() {
     });
 
     // Now start the jobs
+    this.logger && this.logger.info && this.logger.info('@@@@@@@@@@@@@@ Strarting CRON JOBS @@@@@@@@@@@@');
     jobs.forEach(job => job.start());
   } catch (error) {
     console.log("error while running corn-jobs", error);

@@ -14,11 +14,11 @@
             "program": "${workspaceFolder}\\server\\app.js",
             "env": {
                 "DOES_REQUIRED_SCHEDULED_TWITTER_APIS": true,
-                "TWITTER_CONSUMER_KEY": "AEDqkfxLt7JCSPfUOtgG013yS",
-                "TWITTER_CONSUMER_SECRET": "MOdScqJz7US80djiJHvgbOtLwLHTTTF8RycRM7Tm6ske68irsr",
-                "TWITTER_ACCESS_TOKEN_KEY": "174658080-mp9DyHZ0dVygpMScFUqxLgCEME6VtZ6L6bK80I72",
-                "TWITTER_ACCESS_TOKEN_SECRET": "Z04VX2ytnCbPzUhuGRGfNpjMff6FFSEUJUKCEbcwGhYjT",
-                "TWITTER_BEARER_TOKEN": "AAAAAAAAAAAAAAAAAAAAAAU12AAAAAAAPl%2BkaOKnSZ%2BiCv2F7wKPt3tGtb0%3DMIVy0mXgHg66gIU6JfQvi7hAOVpR3BpsbTkGYy1thLLfMO4Awe",
+                "TWITTER_CONSUMER_KEY": "loViGnpw1AlHbpBd1uNH8Cbld",
+                "TWITTER_CONSUMER_SECRET": "OaFPzIqhejRWdsuTS0Oo4wg5P9VALysnHCEq2HllaWyX3A3TkG",
+                "TWITTER_ACCESS_TOKEN_KEY": "1366438880992366592-pgT8N7HZqCzriPv69ehX8K5fAFOE8T",
+                "TWITTER_ACCESS_TOKEN_SECRET": "CZDY6V6fu29dd6bKWVMDH2zqJzN9xf2fRpaUPtOHzOo2K",
+                "TWITTER_BEARER_TOKEN": "AAAAAAAAAAAAAAAAAAAAAK1SNQEAAAAAhGL30EX1kFpDjxr93dlixjhbGNY%3DkGysfbtDu9kQOePNUlvzAPMj9zmksj8S2drCgO5SIucsk4nULb",
                 "JOB_TYPES": "tweets",
                 "TIME_INTERVAL_IN_MINITUES": "1"
             },

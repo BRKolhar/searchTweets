@@ -1,8 +1,10 @@
 const express = require('express')
 const graphqlHttp = require('express-graphql')
 const mongoose = require('mongoose')
-const graphqlSchema = require('./graphql/schema')
-const graphqlResolvers = require('./graphql/resolvers')
+const Logger = require('./services/logger_service')
+const logger = new Logger('searchTweets'); // pass the file name to store the loggers into a file
+const graphqlSchema = require('./graphql/schema');
+const graphqlResolvers = require('./graphql/resolvers')(logger);
 const config = require('./config');
 const scheduledCronJobs = require('./scheduledAPIs/cron');
 const app = express();

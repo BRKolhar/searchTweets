@@ -59,7 +59,7 @@ module.exports = buildSchema(`
 
   type Query {
     articles:[Article!]
-    tweets:[Tweet!]
+    tweets(searchString: String):[Tweet!]
     trendingTweets(weoid: String):[trendingTweetsArray] 
   }
 
