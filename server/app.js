@@ -1,6 +1,7 @@
 const express = require('express')
 const graphqlHttp = require('express-graphql')
 const mongoose = require('mongoose')
+const cors = require('cors');
 const Logger = require('./services/logger_service')
 const logger = new Logger('searchTweets'); // pass the file name to store the loggers into a file
 const graphqlSchema = require('./graphql/schema');
@@ -17,6 +18,7 @@ app.use('/graphql', graphqlHttp({
     rootValue:graphqlResolvers,
     graphiql: true
 }))
+app.use(cors())
 
 if((process.env.DOES_REQUIRED_SCHEDULED_TWITTER_APIS || '').toUpperCase() === 'TRUE'){
     // cronJob will start
