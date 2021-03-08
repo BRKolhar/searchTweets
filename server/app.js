@@ -13,12 +13,12 @@ const app = express();
 let port = (config && config.port) || 8000;
 let mongoDdUrl = (config && config.mongoDdUrl) || '';
 
+app.use(cors())
 app.use('/graphql', graphqlHttp({
     schema:graphqlSchema,
     rootValue:graphqlResolvers,
     graphiql: true
 }))
-app.use(cors())
 
 if((process.env.DOES_REQUIRED_SCHEDULED_TWITTER_APIS || '').toUpperCase() === 'TRUE'){
     // cronJob will start

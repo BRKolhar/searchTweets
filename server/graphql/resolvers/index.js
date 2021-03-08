@@ -62,31 +62,46 @@ module.exports = function (logger) {
                  *  3. send the same data to FE
                  */
                 const { searchString } = args || {};
-                let regex = `^.*${searchString || ''}.*$`;
-                let tweetsFetched = await Tweet.find({ text: { $regex: regex, $options: 'i' } });
-                let dataFormatting = function (data) {
-                    return (data || []).map(tweet => {
-                        return {
-                            ...tweet._doc,
-                            _id: tweet.id,
-                            createdAt: new Date(tweet._doc.createdAt).toISOString(),
-                            updatedAt: new Date(tweet._doc.updatedAt).toISOString()
+                if (!searchString && !searchString.length) { return []; }
+                let resultArray = [];
+                let promise = new Promise((resolve, reject) => {
+                    (searchString || []).map(async (str, i) => {
+                        try {
+                            let regex = `^.*${str || ''}.*$`;
+                            let tweetsFetched = await Tweet.find({ text: { $regex: regex, $options: 'i' } });
+                            let dataFormatting = function (data) {
+                                return (data || []).map(tweet => {
+                                    return {
+                                        ...tweet._doc,
+                                        _id: tweet.id,
+                                        createdAt: new Date(tweet._doc.createdAt).toISOString(),
+                                        updatedAt: new Date(tweet._doc.updatedAt).toISOString()
+                                    }
+                                });
+                            }
+                            if (!tweetsFetched.length) {
+                                /** invoking Twitter-dev-server to fetch the data */
+                                const { maxResult } = args;
+                                let reqParams = {
+                                    max_results: maxResult || 10,
+                                    "tweet.fields": "attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld",
+                                    query: str || ''
+                                };
+                                let result = await tweetHandlers.invokeSearchTweetsApiWithQueryStringAndParams(reqParams);
+                                tweetsFetched = await Tweet.find({ text: { $regex: regex, $options: 'i' } });
+                                // resultArray = [...resultArray, ...dataFormatting(tweetsFetched1)]
+                            }
+                            resultArray = [...resultArray, ...dataFormatting(tweetsFetched)]
+                            if (i + 1 === searchString.length) {
+                                resolve(resultArray);
+                            }   
+                        } catch (error) {
+                            throw error;
                         }
                     });
-                }
-                if (tweetsFetched.length) {
-                    return dataFormatting(tweetsFetched)
-                }
-                /** invoking Twitter-dev-server to fetch the data */
-                const { maxResult } = args;
-                let reqParams = {
-                    max_results: maxResult || 10,
-                    "tweet.fields": "attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,public_metrics,possibly_sensitive,referenced_tweets,reply_settings,source,text,withheld",
-                    query: searchString || ''
-                };
-                let result = await tweetHandlers.invokeSearchTweetsApiWithQueryStringAndParams(reqParams);
-                let tweetsFetched1 = await Tweet.find({ text: { $regex: regex, $options: 'i' } });
-                return dataFormatting(tweetsFetched1);
+                })
+                let res = await promise;
+                return res;
             } catch (error) {
                 throw error
             }
