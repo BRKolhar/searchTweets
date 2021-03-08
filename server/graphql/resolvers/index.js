@@ -62,7 +62,9 @@ module.exports = function (logger) {
                  *  3. send the same data to FE
                  */
                 const { searchString } = args || {};
-                if (!searchString && !searchString.length) { return []; }
+                if (!searchString || !searchString.length) { 
+                    return []; 
+                }
                 let resultArray = [];
                 let promise = new Promise((resolve, reject) => {
                     (searchString || []).map(async (str, i) => {

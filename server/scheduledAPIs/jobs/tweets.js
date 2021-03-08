@@ -5,7 +5,7 @@ module.exports = function (CronJob) {
             let minutes = process.env.TIME_INTERVAL_IN_MINITUES || 1;
 
             var job = new CronJob(`${minutes} * * * * *`, function () {
-                console.log('You will see this message every', minutes, 'min');
+                console.log('This Job will run in every ', minutes, 'min');
                 /**
                 * steps
                 *  1. fetch the data from 'https://api.twitter.com/2/tweets/search/recent'
