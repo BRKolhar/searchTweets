@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import logo from './twitter.png';
-import RepeatIcon from '@material-ui/icons/Repeat';
-import TextsmsIcon from '@material-ui/icons/Textsms';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { requestApiTrendingTweets } from "../layout/actions";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'end',
     flexDirection: 'column',
     padding: '0px !important',
+    maxWidth: '100%'
   },
   mainCounters:{
     flex:'1 1 auto',
@@ -40,51 +42,74 @@ const useStyles = makeStyles((theme) => ({
     justifyContent:'space-around',
     display: 'flex',
     padding: '0px !important',
+  },
+  url:{
+    textAlign: 'left',
+    wordBreak: 'break-all',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitLineClamp: '4',
+    WebkitBoxOrient: 'vertical'
   }
 }));
 
-export default function RightSide() {
+function RightSide(props) {
   const classes = useStyles();
-
+  useEffect(()=>{
+    props.requestApiTrendingTweets();
+  }, [])
+  let {data} = props;
+ let result = data.trendingTweets != null ? data.trendingTweets.trends : null
+ let tweets = (x, i) =>
+ <Paper className={classes.paper} key={i}>
+ <Grid container spacing={2}>
+   <Grid item>
+     <ButtonBase className={classes.image}>
+       <img className={classes.img}  src={logo} alt='twitter' />
+     </ButtonBase>
+   </Grid>
+   <Grid item xs={8} sm container>
+     <Grid item xs container direction="column" spacing={2}>
+       <Grid item xs className={classes.mainContant}>
+         <Typography gutterBottom variant="h5" style={{textAlign:'left', wordBreak: 'break-all'}}>
+         {x.name} 
+         </Typography>
+         <Typography variant="body2" className={classes.url} title={x.url} gutterBottom style={{textAlign:'left', wordBreak: 'break-all'}}>
+            <a href={x.url} target="_blank">{x.url}</a>
+         </Typography>
+       </Grid>
+       {/* <Grid item className={classes.mainCounters}>
+         <Typography variant="body2" style={{ cursor: 'pointer' }}>
+           {x.public_metrics.reply_count}<TextsmsIcon />
+         </Typography>
+         <Typography variant="body2" style={{ cursor: 'pointer' }}>
+         {x.public_metrics.like_count}<FavoriteBorderIcon />
+         </Typography>
+         <Typography variant="body2" style={{ cursor: 'pointer' }}>
+         {x.public_metrics.retweet_count}<RepeatIcon />
+         </Typography>
+       </Grid> */}
+     </Grid>
+   </Grid>
+ </Grid>
+</Paper>;
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <Grid container spacing={2} direction="column" >
-          <Grid item>
-            <ButtonBase className={classes.image}>
-              <img className={classes.img}  src={logo} alt='twitter' />
-            </ButtonBase>
-          </Grid>
-          <Grid item xs={12} sm container>
-            <Grid item xs container direction="column" spacing={2}>
-              <Grid item xs className={classes.mainContant}>
-                <Typography gutterBottom variant="h5">
-                  Ibrahim khalilulla
-                </Typography>
-                <Typography variant="body2" gutterBottom style={{textAlign:'left'}}>
-                Winning doesn’t always mean being first. Winning means you’re doing better than you’ve
-done before. Winning doesn’t always mean being first. Winning means you’re doing better than you’ve
-done before.
-                </Typography>
-              </Grid>
-              <Grid item className={classes.mainCounters}>
-                <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                  10<TextsmsIcon />
-                </Typography>
-                <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                  10<FavoriteBorderIcon />
-                </Typography>
-                <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                10<RepeatIcon />
-                </Typography>
-              </Grid>
-            </Grid>
-            {/* <Grid item>
-              <Typography variant="subtitle1">10<RepeatIcon /></Typography>
-            </Grid> */}
-          </Grid>
-        </Grid>
-      </Paper>
+      <Typography gutterBottom variant="h5" style={{textAlign:'center', wordBreak: 'break-all'}}>
+        Trending Tweets 
+      </Typography>
+    {      result != null    ? <h1>
+          {result.map(tweets)}
+        </h1>
+      : <h1>loading...</h1>}
     </div>
   );
 }
+
+const mapStateToProps = state => ({ data: state.data, ...state });
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ requestApiTrendingTweets }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(RightSide);

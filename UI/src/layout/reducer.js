@@ -1,12 +1,21 @@
-import { RECEIVE_API_DATA } from "./actions";
+import { RECEIVE_API_FILTER, RECEIVE_API_TRENDING_TWEETS } from "./actions";
 let defultValue = {
-    data: null
+    tweets: null,
+    trendingTweets: null
 }
 
-export default (state = defultValue, { type, data }) => {
-  switch (type) {
-    case RECEIVE_API_DATA:
-      return data;
+export default (state = defultValue, action) => {
+  switch (action.type) {
+    case RECEIVE_API_FILTER:
+    return {
+      ...state,
+      tweets: action.data.data.tweets,      
+    }
+    case RECEIVE_API_TRENDING_TWEETS:
+    return {
+      ...state,
+      trendingTweets: action.data.data.trendingTweets[0]
+    }
     default:
       return state;
   }

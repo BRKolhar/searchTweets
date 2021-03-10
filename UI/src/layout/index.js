@@ -1,13 +1,11 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Header from '../components/Header';
 import Main from '../components/Main';
 import RightSide from '../components/RightSide';
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { requestApiData } from "./actions";
+import Logo from '../components/Logo';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,11 +19,23 @@ const useStyles = makeStyles((theme) => ({
   },
   header:{
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'left',
     padding: '30px 0px 0px 0px',
   },
   container:{
     width: '100% !important',
+  },
+  rightSide: {
+    height: '475px',
+    justifyContent: 'space-around',
+   overflowY: 'scroll',
+   '&::-webkit-scrollbar': {
+      width: '12px'
+   },
+   '&::-webkit-scrollbar-track': {
+    WebkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.3)',
+    borderRadius: '10px'
+ }
   }
 }));
 
@@ -36,6 +46,7 @@ function Layout(props) {
       <Grid container className={classes.container} spacing={3}>
         <Grid item xs={12}>
           <Paper className={`${classes.paper} ${classes.header}`}>
+              <Logo />
               <Header />
           </Paper>
         </Grid>
@@ -45,7 +56,7 @@ function Layout(props) {
           </Paper>
         </Grid>
         <Grid item xs={4}>
-          <Paper className={classes.paper}>
+          <Paper className={`${classes.paper} ${classes.rightSide}`}>
             <RightSide />
           </Paper>
         </Grid>
@@ -54,9 +65,4 @@ function Layout(props) {
   );
 }
 
-const mapStateToProps = state => ({ data: state.data });
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ requestApiData }, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Layout);
+export default Layout;

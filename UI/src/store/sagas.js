@@ -1,25 +1,31 @@
-import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { REQUEST_API_DATA, receiveApiData } from "../layout/actions";
-import { fetchData } from "./api";
+import { call, put, takeLatest } from "redux-saga/effects";
+import { REQUEST_API_FILTER,REQUEST_API_TRENDING_TWEETS, receiveApiDataFilter, receiveApiTrendingTweets } from "../layout/actions";
+import { fetchData, trendingTweets } from "./api";
 
-// worker Saga: will be fired on USER_FETCH_REQUESTED actions
+// worker Saga: will be fired on REQUEST_API_FILTER actions
 function* getApiData(action) {
   try {
     // do api call
-    const data = yield call(fetchData);
-    yield put(receiveApiData(data));
+    const tweetList = yield call(fetchData);
+    //const {data} = tweetList;
+    yield put(receiveApiDataFilter(tweetList));
   } catch (e) {
     console.log(e);
   }
 }
 
-/*
-  Alternatively you may use takeLatest.
+// worker Saga: will be fired on REQUEST_API_TRENDING_TWEETS actions
+function* getTrendingTweets(action) {
+  try {
+    // do api call
+    const tweets = yield call(trendingTweets);
+    yield put(receiveApiTrendingTweets(tweets));
+  } catch (e) {
+    console.log(e);
+  }
+}
 
-  Does not allow concurrent fetches of user. If "USER_FETCH_REQUESTED" gets
-  dispatched while a fetch is already pending, that pending fetch is cancelled
-  and only the latest one will be run.
-*/
 export default function* mySaga() {
-  yield takeLatest(REQUEST_API_DATA, getApiData);
+  yield takeLatest(REQUEST_API_FILTER, getApiData);
+  yield takeLatest(REQUEST_API_TRENDING_TWEETS, getTrendingTweets);
 }
