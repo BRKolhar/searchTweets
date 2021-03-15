@@ -79,7 +79,7 @@ module.exports = function (logger) {
                  *  2. store into our DB
                  *  3. send the same data to FE
                  */
-                const { searchString, paging } = args || {};
+                const { searchString, paging, startIndex, endIndex } = args || {};
 
                 if (!searchString || !searchString.length) {
                     return [];
@@ -122,7 +122,7 @@ module.exports = function (logger) {
                     });
                 })
                 let res = await promise;
-                return doPagination(res, paging);
+                return (res || []).slice(startIndex || 0, endIndex || res.length);
             } catch (error) {
                 this.logger && this.logger.error && this.logger.error(error.message, error.stack);
                 throw error
