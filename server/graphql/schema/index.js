@@ -31,7 +31,18 @@ module.exports = buildSchema(`
     updatedAt: String
     source: String
   }
+  
+  type Paging {
+    pageNumber: Int
+    pageSize: Int
+    totalRecords: Int
+  }
 
+  type TweetApiResponse {
+    data: [Tweet]
+    paging: Paging
+  }
+  
   type trendingTweet {
     name: String
     url: String
@@ -59,7 +70,7 @@ module.exports = buildSchema(`
 
   type Query {
     articles:[Article!]
-    tweets(searchString: [String]):[Tweet]
+    tweets(searchString: [String]):TweetApiResponse
     trendingTweets(weoid: String):[trendingTweetsArray] 
   }
 

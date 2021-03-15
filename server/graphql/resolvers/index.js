@@ -5,6 +5,24 @@ const mongoose = require('mongoose')
 
 module.exports = function (logger) {
     this.logger = logger;
+    
+    // This function will arrange the records based on the pageSize & pageNumbers
+    let doPagination = function (data=[], paging={}) {
+        try {
+            let { pageNumber = 1, pageSize = 25 } = paging;
+            return {
+                data: data.slice(((pageNumber-1) * pageSize) , pageSize),
+                paging: {
+                    pageNumber,
+                    pageSize,
+                    totalRecords: data.length
+                }
+            };   
+        } catch (error) {
+            throw error;
+        }
+    };
+
     return {
         articles: async () => {
             try {
@@ -61,9 +79,10 @@ module.exports = function (logger) {
                  *  2. store into our DB
                  *  3. send the same data to FE
                  */
-                const { searchString } = args || {};
-                if (!searchString || !searchString.length) { 
-                    return []; 
+                const { searchString, paging } = args || {};
+
+                if (!searchString || !searchString.length) {
+                    return [];
                 }
                 let resultArray = [];
                 let promise = new Promise((resolve, reject) => {
@@ -96,15 +115,16 @@ module.exports = function (logger) {
                             resultArray = [...resultArray, ...dataFormatting(tweetsFetched)]
                             if (i + 1 === searchString.length) {
                                 resolve(resultArray);
-                            }   
+                            }
                         } catch (error) {
                             throw error;
                         }
                     });
                 })
                 let res = await promise;
-                return res;
+                return doPagination(res, paging);
             } catch (error) {
+                this.logger && this.logger.error && this.logger.error(error.message, error.stack);
                 throw error
             }
 
